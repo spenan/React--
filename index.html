@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" type="text/css" href="css/index.css" />
+    <script src="js/react.development.js"></script>
+    <script src="js/react-dom.development.js"></script>
+    <script src="js/babel.min.js"></script>
+    <title>React-全选</title>
+</head>
+
+<body>
+    <div id="main">
+        <h2 class="top_title">React实现的全选、反选和不选功能</a>
+        </h2>
+        <div class="demo" id="check">
+
+        </div>
+    </div>
+
+    <script type="text/babel">
+        class CheckBox extends React.Component{
+            constructor(){
+                super()
+                this.state={
+                    lists: {
+                        checkAll: { "name": "全选", "state": false },
+                        items: [
+                            { "name": "时间都去哪儿了", "state": false },
+                            { "name": "海阔天空", "state": false },
+                            { "name": "真的爱你", "state": false },
+                            { "name": "不再犹豫", "state": true },
+                            { "name": "光辉岁月", "state": false },
+                            { "name": "喜欢妳", "state": false }
+                        ]
+                    }
+                }
+            }
+            selectChk(cur){
+                let {checkAll,items}=this.state.lists;
+                items.forEach((item,index)=>{
+                    if(item.name==cur.name){
+                        item.state=!item.state;
+                    }
+                })
+                checkAll.state=items.every((item)=>{
+                    return item.state
+                })
+                this.setState({
+                    items:items
+                    // checkAll:checkAll
+                })
+                
+            }
+            checkAll(){
+                let {checkAll,items}=this.state.lists;
+                checkAll.state=!checkAll.state
+                items.forEach((item,index)=>{
+                    item.state=checkAll.state;
+                })
+               
+                this.setState({
+                    checkAll:checkAll,
+                    items:items
+                })
+            }
+            nocheckAll(){
+                let {checkAll,items}=this.state.lists;
+                checkAll.state=false
+                items.forEach((item,index)=>{
+                    item.state=false
+                })
+               
+                this.setState({
+                    checkAll:checkAll,
+                    items:items
+                })
+            }
+            Reverse(){
+                let {checkAll,items}=this.state.lists;
+                items.forEach((item,index)=>{
+                    item.state=!item.state;
+                   
+                })
+                checkAll.state=items.every((item)=>{
+                    return item.state
+                })
+                this.setState({
+                    checkAll:checkAll,
+                    items:items
+                })
+            }
+            getValue(){
+                let {checkAll,items}=this.state.lists;
+                var arr = [];
+                    items.forEach((item) => {
+                        if (item.state == true) {
+                            arr.push(item.name)
+                            return;
+                        }
+                    });
+                    console.log(...arr);
+            }
+            render(){
+                let {checkAll,items}=this.state.lists;
+                let liList=items.map((item,index)=>{
+                    return(
+                        <li key={index}>
+                            <label><input type="checkbox" checked={item.state} onChange={()=>this.selectChk(item)}/>{item.name}</label>
+                        </li>
+                    )
+                })
+                let cheackAll= <input type="checkbox" id="all" checked={checkAll.state} onChange={()=>this.checkAll()}/>
+                return(
+                    <div>
+                        <ul id="list">{liList}</ul>
+                        {cheackAll}
+                        <button className="btn" onClick={()=>this.checkAll()}>{checkAll.name}</button> 
+                        <input type="button" value="全不选" className="btn" onClick={()=>this.nocheckAll()}/> {/*全不选按钮*/}
+                        <input type="button" value="反选" className="btn" onClick={()=>this.Reverse()}/> {/*全不选按钮*/}
+                        <input type="button" value="获得选中的所有值" className="btn" onClick={()=>this.getValue()}/> {/*获得选中的所有值*/}
+                    </div>
+                )
+            }
+
+        }
+        ReactDOM.render(<CheckBox></CheckBox>,document.getElementById('check'))
+    </script>
+</body>
+
+</html>
